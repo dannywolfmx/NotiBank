@@ -20,7 +20,7 @@
     "tinyreq": "^3.4.0"
   },
   "devDependencies": {
-    "electron": "~1.7.8",
+    "electron": ">=1.8.2-beta5",
     "prettier": "1.17.0"
   }
 }
