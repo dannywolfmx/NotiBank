@@ -10,7 +10,7 @@
 
 o
 
-``` npm install ``
+``` npm install ```
 
 ## Ejecucion 
 ```yarn start ```
