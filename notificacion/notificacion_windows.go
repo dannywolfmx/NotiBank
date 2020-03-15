@@ -9,7 +9,7 @@ type notificacion struct {
 	toast *toast.Notification
 }
 
-func dameNuevaNotificacion() *notificacion {
+func DameNuevaNotificacion() *notificacion {
 	return &notificacion{
 		toast: crearToast(),
 	}
