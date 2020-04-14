@@ -7,21 +7,21 @@ import (
 	"gopkg.in/toast.v1"
 )
 
-type notificacion struct {
+type tray struct {
 	toast *toast.Notification
 }
 
-func DameNuevaNotificacion() *notificacion {
-	return &notificacion{
+func NewTray() *tray {
+	return &tray{
 		toast: crearToast(),
 	}
 }
 
-func (n *notificacion) FijaMensaje(mensaje string) {
+func (n *tray) SetMessage(mensaje string) {
 	n.toast.Message = mensaje
 }
 
-func (n *notificacion) Mostrar(tipoAlerta float32) error {
+func (n *tray) Show(tipoAlerta float32) error {
 	icon := ""
 	var err error
 	if tipoAlerta > 0 {
@@ -41,9 +41,7 @@ func (n *notificacion) Mostrar(tipoAlerta float32) error {
 }
 
 func crearToast() *toast.Notification {
-
-	notification := &toast.Notification{
+	return &toast.Notification{
 		AppID: "Tipo de cambio",
 	}
-	return notification
 }
