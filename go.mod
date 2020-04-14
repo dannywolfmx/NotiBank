@@ -1,4 +1,4 @@
-module github.com/dannywolfmx/tipocambio2
+module github.com/dannywolfmx/NotiBank
 
 go 1.13
 

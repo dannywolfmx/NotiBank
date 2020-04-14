@@ -4,43 +4,47 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dannywolfmx/tipocambio2/banco"
-	"github.com/dannywolfmx/tipocambio2/notificacion"
+	"github.com/dannywolfmx/NotiBank/bank"
+	"github.com/dannywolfmx/NotiBank/notificacion"
 )
+
+var actualExchangeRate float32
 
 func main() {
 	run()
 }
 
 func run() {
-	banco, err := banco.Factorybanco("banamex")
+	banco, err := bank.FactoryBank("banamex")
 
 	if err != nil {
 		panic(err)
 	}
 
-	not := notificacion.DameNuevaNotificacion()
+	not := notificacion.NewTray()
 	for {
 
-		go notificaTipoDeCambio(banco, not)
+		if err := notificaTipoDeCambio(banco, not); err != nil {
+			fmt.Print(err)
+		}
 		//30 minutos
-		time.Sleep(1800000 * time.Second)
+		time.Sleep(30 * time.Minute)
 	}
 }
 
-func notificaTipoDeCambio(banco banco.Banco, not notificacion.Notificacion) {
-	var tipoDeCambioViejo float32
-	tipoDeCambio, err := banco.TipoDeCambio()
+func notificaTipoDeCambio(banco bank.Bank, not notificacion.Tray) error {
+
+	newExchangeRate, err := banco.GetExchangeRate()
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+
 	//Determina si el tipo de cambio subio o bajo
-	tipoAlerta := tipoDeCambio - tipoDeCambioViejo
+	alertType := newExchangeRate - actualExchangeRate
 
+	actualExchangeRate = newExchangeRate
 	//Formatear el tipo de cambio para que sea un valor monetario
-	not.FijaMensaje("$ " + fmt.Sprintf("%.2f", tipoDeCambio))
+	not.SetMessage("$ " + fmt.Sprintf("%.2f", newExchangeRate))
 
-	if err := not.Mostrar(tipoAlerta); err != nil {
-		fmt.Println(err)
-	}
+	return not.Show(alertType)
 }

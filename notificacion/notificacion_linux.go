@@ -5,15 +5,15 @@ import (
 	"github.com/gen2brain/beeep"
 )
 
-func DameNuevaNotificacion() *notificacion {
-	return &notificacion{}
+func NewTray() *tray {
+	return &tray{}
 }
 
-type notificacion struct {
+type tray struct {
 	mensaje string
 }
 
-func (n *notificacion) Mostrar(tipoAlerta float32) error {
+func (n *tray) Show(tipoAlerta float32) error {
 	if err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration); err != nil {
 		return err
 	}
@@ -24,6 +24,6 @@ func (n *notificacion) Mostrar(tipoAlerta float32) error {
 	return nil
 }
 
-func (n *notificacion) FijaMensaje(mensaje string) {
+func (n *tray) SetMessage(mensaje string) {
 	n.mensaje = mensaje
 }
