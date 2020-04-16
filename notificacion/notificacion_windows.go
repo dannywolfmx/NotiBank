@@ -13,35 +13,40 @@ type tray struct {
 
 func NewTray() *tray {
 	return &tray{
-		toast: crearToast(),
+		toast: &toast.Notification{
+			AppID: "Tipo de cambio",
+		},
 	}
 }
 
-func (n *tray) SetMessage(mensaje string) {
+func (n *tray) SetMessage(mensaje string, status int) {
 	n.toast.Message = mensaje
+	//Check if exist a messege
+	if m, ok := dafaultMessage[status]; ok {
+		n.toast.Title = m.title
+		//TODO esta funcion no verifica que exista el icono
+		//Check if the file exist
+		if icon, err := filepath.Abs(m.iconPath); err == nil {
+			n.toast.Icon = icon
+		}
+	}
+
 }
 
-func (n *tray) Show(tipoAlerta float32) error {
-	icon := ""
-	var err error
-	if tipoAlerta > 0 {
-		n.toast.Title = "Subio el tipo de cambio"
-		icon, err = filepath.Abs("up-red.png")
-	} else if tipoAlerta == 0 {
-		n.toast.Title = "Tipo de cambio igual"
-		icon, err = filepath.Abs("equal.png")
-	} else {
-		n.toast.Title = "Bajo el tipo de cambio"
-		icon, err = filepath.Abs("down-green.png")
-	}
-	if err == nil {
-		n.toast.Icon = icon
-	}
+func (n *tray) Show() error {
 	return n.toast.Push()
 }
 
-func crearToast() *toast.Notification {
-	return &toast.Notification{
-		AppID: "Tipo de cambio",
+func (n *tray) getIcon(tipoNotificacion int) (message string, icon string) {
+	switch tipoNotificacion {
+	case ExchangeUp:
+		message, icon = "Subio el tipo de cambio", ""
+	case ExchangeDown:
+		message, icon = "Bajo el tipo de cambio", ""
+	case ExchangeSame:
+		message, icon = "Tipo de cambio igual", ""
+	case ErrorConnection:
+		message, icon = "Error conexion", "equal.png"
 	}
+	return
 }

@@ -10,20 +10,27 @@ func NewTray() *tray {
 }
 
 type tray struct {
-	mensaje string
+	message, title string
 }
 
-func (n *tray) Show(tipoAlerta float32) error {
+func (t *tray) Show() error {
 	if err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration); err != nil {
 		return err
 	}
 
-	if err := beeep.Notify("Tipo de cambio", n.mensaje, ""); err != nil {
+	if err := beeep.Notify(t.title, t.message, ""); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (n *tray) SetMessage(mensaje string) {
-	n.mensaje = mensaje
+func (t *tray) SetMessage(message string, status int) Tray {
+	t.message = message
+
+	if m, ok := dafaultMessage[status]; ok {
+		t.title = m.title
+	} else {
+		t.title = "Tipo de cambio"
+	}
+	return t
 }
