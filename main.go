@@ -28,7 +28,7 @@ func run() {
 			notificarErrorConexion(not)
 		}
 		//30 minutos
-		time.Sleep(10 * time.Second)
+		time.Sleep(30 * time.Minute)
 	}
 }
 
